@@ -24,3 +24,6 @@ Thumbs.db
 
 # Env
 .env
+
+# compiled js
+*.js
