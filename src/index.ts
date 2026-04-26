@@ -54,7 +54,7 @@ const inputTokens = [
   ")",
   ";", // El primer ; cierra la llamada a función (stmt_fun_call)
   ";", // El segundo ; es un stmt_empty
-  ";", // El tercer ; es un stmt_empty
+  ";",";",";",";",";",";",";",";",";",";",";",";",";",";",";",";",";",";",";",";",";",";",";", // El tercer ; es un stmt_empty
   "return",
   "lit_int", // 42
   ";", // El primer ; cierra el return (stmt_return)
