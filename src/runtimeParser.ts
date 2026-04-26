@@ -15,10 +15,10 @@ export function parse(
   let i = 0;
 
   // Encabezados de la tabla de traza
-  console.log(
-    `${"PILA (Estados y Símbolos)".padEnd(50)} | ${"CADENA".padEnd(30)} | ${"ACCIÓN"}`
-  );
-  console.log("-".repeat(110));
+  // console.log(
+  //   `${"PILA (Estados y Símbolos)".padEnd(50)} | ${"CADENA".padEnd(30)} | ${"ACCIÓN"}`
+  // );
+  // console.log("-".repeat(110));
 
   while (true) {
     const currentState = stateStack[stateStack.length - 1];
@@ -34,7 +34,7 @@ export function parse(
     const remainingInput = tokens.slice(i).join(" ");
 
     if (!action) {
-      console.log(`${combinedStack.padEnd(50)} | ${remainingInput.padEnd(30)} | ❌ ERROR`);
+      // console.log(`${combinedStack.padEnd(50)} | ${remainingInput.padEnd(30)} | ❌ ERROR`);
       console.error(`\nError sintáctico: No se esperaba "${currentToken}" en el estado ${currentState}`);
       return false;
     }
@@ -43,7 +43,7 @@ export function parse(
     if (action.startsWith("s")) {
       const nextState = parseInt(action.substring(1));
       
-      console.log(`${combinedStack.padEnd(50)} | ${remainingInput.padEnd(30)} | Shift s${nextState}`);
+      // console.log(`${combinedStack.padEnd(50)} | ${remainingInput.padEnd(30)} | Shift s${nextState}`);
 
       stateStack.push(nextState);
       symbolStack.push(currentToken); // Guardamos el token en la pila de símbolos
@@ -60,9 +60,9 @@ export function parse(
         return false;
       }
 
-      console.log(
-        `${combinedStack.padEnd(50)} | ${remainingInput.padEnd(30)} | Reduce r${ruleIndex} (${prod.lhs} -> ${prod.rhs.join(" ") || "ε"})`
-      );
+      // console.log(
+      //   `${combinedStack.padEnd(50)} | ${remainingInput.padEnd(30)} | Reduce r${ruleIndex} (${prod.lhs} -> ${prod.rhs.join(" ") || "ε"})`
+      // );
 
       // Sacar de ambas pilas
       const elementsToPop = prod.rhs.length;
@@ -86,7 +86,7 @@ export function parse(
 
     // --- CASO ACCEPT ---
     else if (action === "acc") {
-      console.log(`${combinedStack.padEnd(50)} | ${remainingInput.padEnd(30)} | ✅ ACCEPT`);
+      // console.log(`${combinedStack.padEnd(50)} | ${remainingInput.padEnd(30)} | ✅ ACCEPT`);
       return true;
     }
   }

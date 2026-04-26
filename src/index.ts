@@ -79,8 +79,12 @@ const { ACTION, GOTO } = await loadTableFromCSV(
 
 try {
     console.log("Analizando tokens:", inputTokens);
-  parse(inputTokens, ACTION, GOTO);
-  console.log("¡El código es sintácticamente correcto!");
+  const correct = parse(inputTokens, ACTION, GOTO);
+    if (correct) {
+        console.log("\nAnálisis sintáctico completado: La cadena es CORRECTA.✅✅✅✅✅✅✅✅✅✅✅ ASI EMOJIS BIEN CHATGPT ✅✅✅✅✅✅✅✅");
+    } else {
+        console.log("\nAnálisis sintáctico completado: La cadena es INCORRECTA.");
+    }
 } catch (e) {
   console.error("Error durante el análisis.");
 }
