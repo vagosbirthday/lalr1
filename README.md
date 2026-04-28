@@ -9,3 +9,6 @@ npm install
 cd src/
 
 npm run dev
+
+
+npx ts-node src/main.ts samples/001_hello.quetzal
