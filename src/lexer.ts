@@ -175,7 +175,6 @@ export function tokenize(input: string): Token[] {
   while (src.length > 0) {
     let char = src[0]!;
 
-    // 1. Saltos de línea y espacios
     if (char === "\n") { line++; src.shift(); continue; }
     if (/\s/.test(char)) { src.shift(); continue; }
 
@@ -193,23 +192,38 @@ export function tokenize(input: string): Token[] {
       continue;
     }
 
-    // 3. Literales de String -> "lit_str"
+    // 3. Literales de String -> "lit_str" (CON SOPORTE DE ESCAPE)
     if (char === '"') {
-      src.shift();
+      src.shift(); // Consumir " inicial
       let value = "";
-      while (src.length > 0 && src[0] !== '"') value += src.shift()!;
-      src.shift();
+      while (src.length > 0 && src[0] !== '"') {
+        let c = src.shift()!;
+        if (c === "\\") { // Si encontramos \, el siguiente carácter es parte del escape
+          value += c; 
+          if (src.length > 0) value += src.shift(); 
+        } else {
+          value += c;
+          if (c === "\n") line++;
+        }
+      }
+      if (src.length === 0) throw new Error(`❌ Error Léxico: String no cerrado en línea ${line}`);
+      src.shift(); // Consumir " final
       push(value, "lit_str");
       continue;
     }
 
-    // 4. Literales de Carácter -> "lit_char"
+    // 4. Literales de Carácter -> "lit_char" (CON SOPORTE DE ESCAPE)
     if (char === "'") {
-      src.shift();
+      src.shift(); // Consumir ' inicial
       let value = "";
-      if (src[0] === "\\") { value += src.shift(); value += src.shift(); }
-      else { value += src.shift(); }
-      src.shift();
+      if (src[0] === "\\") {
+        value += src.shift(); // Consumir \
+        value += src.shift(); // Consumir carácter escapado (ej: n, t, ')
+      } else {
+        value += src.shift(); // Consumir carácter normal
+      }
+      if (src[0] !== "'") throw new Error(`❌ Error Léxico: Carácter mal formado en línea ${line}`);
+      src.shift(); // Consumir ' final
       push(value, "lit_char");
       continue;
     }
@@ -230,24 +244,23 @@ export function tokenize(input: string): Token[] {
       if (value === "true" || value === "false") {
         push(value, "lit_bool");
       } else if (KEYWORDS.has(value)) {
-        push(value, value); // El tipo es la keyword misma: "var", "if", etc.
+        push(value, value);
       } else {
-        push(value, "id"); // El tipo para cualquier variable/función es "id"
+        push(value, "id");
       }
       continue;
     }
 
-    // 7. Operadores Compuestos (Revisar 2 caracteres)
+    // 7. Operadores Compuestos (Corregido para no duplicar)
     const next = src[1];
     if ((char === "=" || char === "!" || char === "<" || char === ">") && next === "=") {
       src.shift(); src.shift();
       const op = char + "=";
-      push(op, op); // Tipo: "==", "!=", "<=", ">="
+      push(op, op);
       continue;
     }
 
-    // 8. Símbolos de un solo carácter (Tipo = Carácter)
-    // Cubre: ( ) [ ] { } , ; + - * / % < > = !
+    // 8. Símbolos de un solo carácter
     if ("()[]{},;+-*/%<>=!".includes(char)) {
       push(char, char);
       src.shift();
@@ -257,6 +270,6 @@ export function tokenize(input: string): Token[] {
     throw new Error(`Unknown character '${char}' at line ${line}`);
   }
 
-  push("$", "$"); // Token de fin obligatorio para el Parser SLR
+  push("$", "$");
   return tokens;
 }
