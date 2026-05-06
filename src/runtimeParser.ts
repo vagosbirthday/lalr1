@@ -6,9 +6,18 @@ export function parse(tokens: string[], ACTION: any, GOTO: any): boolean {
   let i = 0;
   let opsWithoutAdvance = 0; // Contador de seguridad
 
+  console.log(
+    `${"PILA (Estados y Símbolos)".padEnd(50)} | ${"CADENA".padEnd(30)} | ${"ACCIÓN"}`
+  );
+  console.log("-".repeat(110));
+
   while (true) {
     const currentState = stateStack[stateStack.length - 1];
     const currentToken = tokens[i];
+    const remainingInput = tokens.slice(i).join(" ");
+    const combinedStack = stateStack
+      .map((st, idx) => `${st}${symbolStack[idx] !== "$" ? ` ${symbolStack[idx]}` : ""}`)
+      .join(" ");
     const action = ACTION[currentState]?.[currentToken];
 
     // --- SEGURIDAD: Evitar congelamiento ---
@@ -25,6 +34,7 @@ export function parse(tokens: string[], ACTION: any, GOTO: any): boolean {
 
     if (action.startsWith("s")) {
       const nextState = parseInt(action.substring(1));
+       console.log(`${combinedStack.padEnd(50)} | ${remainingInput.padEnd(30)} | Shift s${nextState}`);
       stateStack.push(nextState);
       symbolStack.push(currentToken);
       i++;
@@ -34,6 +44,10 @@ export function parse(tokens: string[], ACTION: any, GOTO: any): boolean {
       const ruleIndex = parseInt(action.substring(1));
       const prod = productions[ruleIndex];
       
+      console.log(
+        `${combinedStack.padEnd(50)} | ${remainingInput.padEnd(30)} | Reduce r${ruleIndex} (${prod.lhs} -> ${prod.rhs.join(" ") || "ε"})`
+      );
+
       const elementsToPop = prod.rhs.length;
       for (let j = 0; j < elementsToPop; j++) {
         stateStack.pop();
@@ -52,7 +66,7 @@ export function parse(tokens: string[], ACTION: any, GOTO: any): boolean {
       // No incrementamos i en reduce, ni reseteamos el contador todavía
     } 
     else if (action === "acc") {
-      console.log("✅ ACCEPT");
+      console.log(`${combinedStack.padEnd(50)} | ${remainingInput.padEnd(30)} | ✅ ACCEPT`);
       return true;
     }
   }

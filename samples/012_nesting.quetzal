@@ -1,0 +1,46 @@
+empty_func() { ; }
+
+multi_param(a, b, c, d, e, f, g, h, i, j) {
+    return a + b + c + d + e + f + g + h + i + j;
+}
+
+main() {
+    var x, y, z;
+
+    x = not true or a + b * c == d / e - f and false;
+    
+    x = (((((1 + 1) * 2) / (3 - 1)) + 10) % 2);
+
+    if (x == 0) 
+        if (y == 1) 
+            prints("Anidado");
+        else 
+            prints("Este else es del segundo if");
+
+    if ((x = 10) == 10 and not (y != 20)) {
+        ; // Sentencia vacía legal
+    }
+
+    x = [ 10 + 5 * 2 ]; // Array de tamaño 20
+    y = [ 1, 2, 3 + 4, shadow_test(10), [5, 6][0] ];
+
+    z = multi_param(1, 2, 3, 4, 5, 6, 7, 8, 9, 10) + multi_param(x, x, x, x, x, x, x, x, x, x);
+
+    loop {
+        if (true) { break; }
+        ;
+        if (false) { ; } else { break; }
+    }
+
+    prints(""); // Cadena vacía
+    prints("Cadena con escape de comilla: \" y backslash: \\ ");
+
+    return 0;
+}
+
+unary_test() {
+    var a;
+    a = ---5;
+    a = not not not true;
+    return - - - a; 
+}

@@ -7,6 +7,7 @@
 sqr(x) {
     return x * x;
 }
+f;
 
 main() {
     var array, sum, i, j, x;

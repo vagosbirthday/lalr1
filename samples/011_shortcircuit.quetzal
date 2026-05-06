@@ -1,0 +1,73 @@
+var x, y, main_var; // Variables globales
+
+shadow_test(x) {
+    var shadow_test; 
+    shadow_test = 100;
+    
+    if (x == shadow_test) {
+        printi(1);
+    } else {
+        printi(0);
+    }
+    
+    return shadow_test;
+}
+
+is_even(n) {
+    if (n == 0) { return true; }
+    return is_odd(n - 1);
+}
+
+is_odd(n) {
+    if (n == 0) { return false; }
+    return is_even(n - 1);
+}
+
+main() {
+    var a, b, c, handle;
+    
+    a = '\''; 
+    b = '\u000041'; // Carácter 'A'
+    prints("Probando escapes: \"Hola\tMundo\"\n");
+    
+    if (true or (1 / 0 == 0)) { 
+        prints("Cortocircuito 'or' funciona\n");
+    }
+
+    if (false and (1 / 0 == 0)) {
+        // No debería entrar aquí
+    } else {
+        prints("Cortocircuito 'and' funciona\n");
+    }
+
+    handle = [10, 20, 30, 40];
+    c = size(handle);
+    if (c == 4) {
+        prints("Tamaño de array correcto\n");
+    }
+    
+    set(handle, 0, 99);
+    if (get(handle, 0) == 99) {
+        prints("API set/get funciona\n");
+    }
+
+    x = 0;
+    loop {
+        inc x;
+        if (x > 5) {
+            break; 
+        }
+        
+        loop { ; break; } 
+    }
+    
+    y = shadow_test(100);
+
+    if (is_even(10)) {
+        prints("Paridad recursiva correcta\n");
+    }
+
+    return 0; 
+}
+
+var trailing_global;
